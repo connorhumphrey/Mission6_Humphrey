@@ -6,8 +6,8 @@ namespace Mission6_Humphrey.Controllers
 {
     public class HomeController : Controller
     {
-        private MovieFormContext _context;
-        public HomeController(MovieFormContext temp) { //constructor
+        private MovieFormContext1 _context;
+        public HomeController(MovieFormContext1 temp) { //constructor
             
             _context = temp;
         }
@@ -23,18 +23,32 @@ namespace Mission6_Humphrey.Controllers
         }
 
         [HttpGet]
-        public IActionResult MovieForm()
+        public IActionResult MovieForm1()
         {
+         
             return View();
         }
 
+
         [HttpPost]
-        public IActionResult MovieForm(Submission response)
+        public IActionResult MovieForm1(Submission1 response)
         {
-            _context.Submissions.Add(response); //Add to database
+            _context.Movies.Add(response); //Add to database
             _context.SaveChanges();
             return View("Index", response);
         }
 
+        public IActionResult ViewMovies ()
+        {
+            var submissions = _context.Movies
+                .OrderBy(x => x.Title).ToList();
+
+            return View(submissions);
+        }
+
+        public IActionResult Edit()
+        {
+            return View("MovieForm1");
+        }
     }
 }
