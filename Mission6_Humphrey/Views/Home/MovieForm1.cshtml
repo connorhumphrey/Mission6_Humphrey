@@ -8,17 +8,16 @@
 <br />
 
 <form method="post">
+
+    <input type="hidden" asp-for="MovieId" />
+
     <label asp-for="CategoryId">Category</label>
     <select asp-for="CategoryId">
-        <option value=""> -- </option>
-        <option value="1">Miscellaneous</option>
-        <option value="2">Drama</option>
-        <option value="3">Television</option>
-        <option value="4">Horror/Suspense</option>
-        <option value="5">Comedy</option>
-        <option value="6">Family</option>
-        <option value="7">Action/Adventure</option>
-        <option value="8">VHS</option>
+       <option values=""></option>
+       @foreach (MovieCategories c in ViewBag.Categories)
+        {
+            <option value="@c.CategoryId">@c.CategoryName</option>
+        }
     </select>
     <br />
     <label asp-for="Title">Title</label>
@@ -61,5 +60,7 @@
     <br />
     <br />
     <button type="submit">Submit</button>
+
+    <div asp-validation-summary="All"></div>
 
 </form>

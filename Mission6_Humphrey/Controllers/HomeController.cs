@@ -25,17 +25,26 @@ namespace Mission6_Humphrey.Controllers
         [HttpGet]
         public IActionResult MovieForm1()
         {
+            ViewBag.Categories = _context.Categories;
          
-            return View();
+            return View("MovieForm1", new Submission1());
         }
 
 
         [HttpPost]
         public IActionResult MovieForm1(Submission1 response)
         {
-            _context.Movies.Add(response); //Add to database
-            _context.SaveChanges();
-            return View("Index", response);
+            if (ModelState.IsValid)
+            {
+                _context.Movies.Add(response); //Add to database
+                _context.SaveChanges();
+                return View("Confirmation", response);
+            }
+            else //invalid
+            {
+                ViewBag.Categories = _context.Categories;
+                return View(response);
+            }
         }
 
         public IActionResult ViewMovies ()
@@ -46,9 +55,41 @@ namespace Mission6_Humphrey.Controllers
             return View(submissions);
         }
 
-        public IActionResult Edit()
+        [HttpGet]
+        public IActionResult Edit(int id)
         {
-            return View("MovieForm1");
+            var recordToEdit = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            ViewBag.Categories = _context.Categories;
+            return View("MovieForm1", recordToEdit);
         }
+
+        [HttpPost]
+        public IActionResult Edit(Submission1 updatedInfo)
+        {
+            _context.Update(updatedInfo);
+            _context.SaveChanges();
+            return RedirectToAction("ViewMovies");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var recordToDelete = _context.Movies
+            .Single(x => x.MovieId == id);
+
+            return View(recordToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Submission1 deleted)
+        {
+            _context.Movies.Remove(deleted);
+            _context.SaveChanges();
+
+            return RedirectToAction("ViewMovies");
+        }
+
     }
 }
